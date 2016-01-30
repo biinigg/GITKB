@@ -1,0 +1,16 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=BIG5">
+<title>Insert title here</title>
+<link rel="stylesheet" type="text/css" href="./../../extjs/resources/css/ext-all.css" />
+<script type="text/javascript" src="./../../extjs/js/ext-all.js"></script>
+<script type="text/javascript" src="./../../dcijs/dci-all.js"></script>
+<script type="text/javascript" src="./../../FuncView/js_src/ExtComponents.js"></script>
+<script type="text/javascript">
+	alert();
+</script>
+</head>
+<body>
+
+</body>
+</html>

@@ -1,0 +1,253 @@
+/**
+ * 
+ */
+var t1,t2,t3,t4;
+function showPage() {
+	
+	Ext.Loader.setConfig({
+		enabled : true
+	});
+
+	Ext.Loader.setPath('Ext.ux', '../ux/');
+
+	Ext.require([ 'Ext.tab.*', 'Ext.ux.TabCloseMenu' ]);
+	Ext.onReady(function() {
+
+				var currentItem;
+
+				var tabs = Ext.widget('tabpanel', {
+					renderTo : 'tabs',
+					resizeTabs : true,
+					enableTabScroll : true,
+					width : 600,
+					height : 250,
+					defaults : {
+						autoScroll : true,
+						bodyPadding : 10
+					},
+					items : [ {
+						title : 'Tab 1',
+						iconCls : 'tabs',
+						// html: 'Tab Body<br/><br/>' + Ext.example.bogusMarkup,
+						closable : true
+					} ],
+					plugins : Ext.create('Ext.ux.TabCloseMenu', {
+						extraItemsTail : [ '-', {
+							text : 'Closable',
+							checked : true,
+							hideOnClick : true,
+							handler : function(item) {
+								currentItem.tab.setClosable(item.checked);
+							}
+						}, '-', {
+							text : 'Enabled',
+							checked : true,
+							hideOnClick : true,
+							handler : function(item) {
+								currentItem.tab.setDisabled(!item.checked);
+							}
+						} ],
+						listeners : {
+							beforemenu : function(menu, item) {
+								var enabled = menu.child('[text="Enabled"]');
+								menu.child('[text="Closable"]').setChecked(
+										item.closable);
+								if (item.tab.active) {
+									enabled.disable();
+								} else {
+									enabled.enable();
+									enabled.setChecked(!item.tab.isDisabled());
+								}
+
+								currentItem = item;
+							}
+						}
+					})
+				});
+
+				// tab generation code
+				var index = 0;
+
+				while (index < 3) {
+					addTab(index % 2);
+				}
+
+				function doScroll(item) {
+					var id = item.id.replace('_menu', ''), tab = tabs
+							.getComponent(id).tab;
+
+					tabs.getTabBar().layout.overflowHandler.scrollToItem(tab);
+				}
+
+				function addTab(closable) {
+					++index;
+					tabs.add({
+						closable : !!closable,
+						html : 'Tab Body ' + index + '<br/><br/>',// +
+																	// Ext.example.bogusMarkup,
+						iconCls : 'tabs',
+						title : 'New Tab ' + index
+					}).show();
+				}
+
+				function addToMenu(ct, tab) {
+					menu.add({
+						text : tab.title,
+						id : tab.id + '_menu',
+						handler : doScroll
+					});
+				}
+
+				function removeFromMenu(ct, tab) {
+					var id = tab.id + '_menu';
+					menu.remove(id);
+				}
+				var ItemPanel= Ext.create('Ext.panel.Panel',{
+					title : 'Menu',
+					id:'ItemPanel',
+					defaults: {enableToggle: true}
+				});
+				function menuListener(txt) {
+					var panel =Ext.getCmp('ItemPanel');
+					panel.removeAll();
+					for(var i in txt){
+						panel.add({xtype : 'button',
+									text:txt[i],
+									width:'600',
+									height:'20',
+									toggleGroup : 'btngroup'
+						});
+					}
+					panel.doLayout();
+				}
+
+				tabs.on({
+					add : addToMenu,
+					remove : removeFromMenu
+				});
+
+				Ext.widget('button', {
+					iconCls : 'new-tab',
+					renderTo : 'addButtonCt',
+					text : 'Add Closable Tab',
+					handler : function() {
+						addTab(true);
+					}
+				});
+
+				Ext.widget('button', {
+					iconCls : 'new-tab',
+					renderTo : 'addButtonCt',
+					style : 'margin-left: 8px;',
+					text : 'Add Unclosable Tab',
+					handler : function() {
+						addTab(false);
+					}
+				});
+
+				var menu = new Ext.menu.Menu();
+				tabs.items.each(function(tab) {
+					addToMenu(tabs, tab);
+				});
+				Ext.widget('button', {
+					iconCls : 'scroll',
+					renderTo : 'addButtonCt',
+					style : 'margin-left: 8px;',
+					text : 'Scroll to:',
+					menu : menu
+				})
+				Ext.create('Ext.panel.Panel', {
+					title : 'Menu',
+					width : 600,
+					// layout:'absolute',
+					items : [ {
+						xtype : 'button',
+						layout:'fit',
+						align : 'center',
+						text : '請選擇',
+						menu : new Ext.menu.Menu({
+							items : [ {
+								text : 'Item 1',
+								handler : function() {
+									var arr =new Array("audi","volvol","benz");
+									menuListener(arr);
+								}
+							}, {
+								text : 'Item 2',
+								handler : function() {
+									var arr =new Array("andy","vicky","bebe");
+									menuListener(arr);
+								}
+							} ]
+						})
+					} ,ItemPanel, {
+						xtype : 'button',
+						layout:'fit',
+						text : '確定',
+						handler : function() {
+							var panel =Ext.getCmp('ItemPanel');
+							var btnList=panel.items;
+							for(var i=0;i<btnList.length;i++){
+								if(btnList.get(i).pressed){
+									alert(btnList.get(i).text);
+								}
+							}
+						}
+					} ],
+					// html: '<p>World!</p>',
+					renderTo : 'Menu'
+				});
+				
+				//小算盤
+				/*var countForm=Ext.create('Ext.form.Panel', {
+				    title: 'Base Example',
+				    bodyPadding: 5,
+				    width: 250,
+				    items: [{
+				        xtype: 'numberfield',
+				        labelWidth: 110,
+		                fieldLabel: '數量',
+		                id: 'count',
+		                name:'count',
+		                value: 1,
+		                minValue: 1,
+		                maxValue: 999
+				    }]
+				});*/
+				var digitForm=Ext.create('Ext.form.Panel', {
+				    title: 'Base Example',
+				    bodyPadding: 5,
+				    width: 250,
+				    layout:{
+				    	type:'vbox', 
+				    	columns: 3
+			    	}, 
+				    defaults: {
+				        bodyStyle: 'padding:20px'
+				    },
+				    items: [{
+				        xtype: 'numberfield',
+				        labelWidth: 110,
+		                fieldLabel: '數量',
+		                id: 'count',
+		                name:'count',
+		                value: 1,
+		                minValue: 1,
+		                maxValue: 999,
+		                colspan: 3
+				    }]
+				});
+				Ext.create('Ext.panel.Panel', {
+					title : 'Count',
+					height:500,
+					width : 600,
+					// layout:'absolute',
+					renderTo : 'Caculator',
+					items : [ {
+						xtype : 'button',
+						text : '請選擇'},digitForm
+					 ]
+					
+				});
+	});
+}

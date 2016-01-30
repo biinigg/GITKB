@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<project name="jsbuilder" default="cssandjsbuilder" xmlns:ac="antlib:net.sf.antcontrib">
+	<taskdef resource="net/sf/antcontrib/antlib.xml" />
+	<property name="web.root" location="KanBan" />
+	<property name="css.path" location="${web.root}/extjs/resources/css" />
+	<property name="dcicss.path" location="${web.root}/dci_css_src" />
+	<property name="dcicsswork.path" location="${web.root}/dcicss" />
+	<property name="closure.path" location="../../ThirdPartyLibs/Tools/compiler.jar" />
+	<property name="jssrc.path" location="${web.root}/dci_js_src/src" />
+	<property name="funcjssrc.path" location="${web.root}/dci_js_src/func_src" />
+	<property name="extsrc.path" location="${web.root}/dci_js_src/extjs" />
+	<property name="jswork.path" location="${web.root}/extjs/js" />
+	<property name="yuicompressor.path" location="../../ThirdPartyLibs/Tools/yuicompressor-2.4.7.jar" />
+	<property name="dcijswork.path" location="${web.root}/dcijs" />
+	<property name="dcijsfunc.path" location="${web.root}/FuncViews/js" />
+	<property name="configs.list" value="SysDBConfig,RegSerial" />
+	<property name="cusjsfunc.path" location="${web.root}/Customer/js" />
+	<property name="cusfuncjssrc.path" location="${web.root}/dci_js_src/cus" />
+	<property name="customer.list" value="dci,C06100137,C02420302" />
+	<var name="tmpcusdir" value="" />
+
+	<target name="cssandjsbuilder">
+		<echo message="build css" />
+		<apply executable="java" verbose="true" dest="${css.path}/" failonerror="true" parallel="false">
+			<fileset dir="${css.path}/" includes="ext-all.css" />
+			<arg line="-jar" />
+			<arg path="${yuicompressor.path}" />
+			<arg line="--charset utf-8" />
+			<arg value="--type" />
+			<arg value="css" />
+			<arg value="-o" />
+			<targetfile />
+			<mapper type="glob" from="*.css" to="*-min.css" />
+		</apply>
+		<echo message="delete ${css.path}/ext-all.css css" />
+		<delete file="${css.path}/ext-all.css" />
+		<move file="${css.path}/ext-all-min.css" tofile="${css.path}/ext-all.css" />
+		<apply executable="java" verbose="true" dest="${dcicsswork.path}/" failonerror="true" parallel="false">
+			<fileset dir="${dcicss.path}/" includes="lkb01.css" />
+			<arg line="-jar" />
+			<arg path="${yuicompressor.path}" />
+			<arg line="--charset utf-8" />
+			<arg value="--type" />
+			<arg value="css" />
+			<arg value="-o" />
+			<targetfile />
+			<mapper type="glob" from="*.css" to="lkb01.css" />
+		</apply>
+
+		<apply executable="java" verbose="true" dest="${dcicsswork.path}/" failonerror="true" parallel="false">
+			<fileset dir="${dcicss.path}/" includes="dcicss.css" />
+			<arg line="-jar" />
+			<arg path="${yuicompressor.path}" />
+			<arg line="--charset utf-8" />
+			<arg value="--type" />
+			<arg value="css" />
+			<arg value="-o" />
+			<targetfile />
+			<mapper type="glob" from="*.css" to="dcicss.css" />
+		</apply>
+
+		<echo message="delete all js" />
+		<delete file="${jswork.path}/ext-all.js" />
+		<delete file="${dcijswork.path}/dci-all.js" />
+		<delete file="${dcijswork.path}/dci-datas.js" />
+
+		<concat destfile="${jswork.path}/dcijs.source.js" encoding="utf-8" outputencoding="utf-8">
+			<path path="${jssrc.path}/DCIJsPubMethods.js" />
+			<path path="${jssrc.path}/DCIApp.js" />
+			<path path="${jssrc.path}/ExtOverride.js" />
+			<path path="${jssrc.path}/DragSelector.js" />
+			<path path="${jssrc.path}/CellDragDrop.js" />
+			<path path="${jssrc.path}/statusbar.js" />
+		</concat>
+
+		<apply executable="java" verbose="true" dest="${jswork.path}/" failonerror="true" parallel="false">
+			<fileset dir="${jswork.path}/" includes="dcijs.source.js" />
+			<arg line="-jar" />
+			<arg path="${closure.path}" />
+			<arg line="--charset utf-8" />
+			<arg value="--warning_level" />
+			<arg value="QUIET" />
+			<arg value="--js" />
+			<srcfile />
+			<arg value="--js_output_file" />
+			<targetfile />
+			<mapper type="regexp" from="dcijs.source.js" to="dcijs-min.js" />
+		</apply>
+		<concat destfile="${jswork.path}/dcijs.final.js" encoding="utf-8" outputencoding="utf-8">
+			<path path="${extsrc.path}/ext-all" />
+			<path path="${jswork.path}/dcijs-min.js" />
+		</concat>
+		<delete file="${jswork.path}/dcijs.source.js" />
+		<delete file="${jswork.path}/dcijs-min.js" />
+		<move file="${jswork.path}/dcijs.final.js" tofile="${jswork.path}/ext-all.js" />
+
+		<concat destfile="${dcijswork.path}/dcijs.source.js" encoding="utf-8" outputencoding="utf-8">
+			<path path="${jssrc.path}/DCIExtComponents.js" />
+			<path path="${jssrc.path}/IndexPageView.js" />
+		</concat>
+
+		<apply executable="java" verbose="true" dest="${dcijswork.path}/" failonerror="true" parallel="false">
+			<fileset dir="${dcijswork.path}/" includes="dcijs.source.js" />
+			<arg line="-jar" />
+			<arg path="${closure.path}" />
+			<arg line="--charset utf-8" />
+			<arg value="--warning_level" />
+			<arg value="QUIET" />
+			<arg value="--js" />
+			<srcfile />
+			<arg value="--js_output_file" />
+			<targetfile />
+			<mapper type="regexp" from="dcijs.source.js" to="dcijs-min.js" />
+		</apply>
+		<delete file="${dcijswork.path}/dcijs.source.js" />
+		<move file="${dcijswork.path}/dcijs-min.js" tofile="${dcijswork.path}/dci-all.js" />
+
+		<concat destfile="${dcijswork.path}/dcijs.source.js" encoding="utf-8" outputencoding="utf-8">
+			<path path="${jssrc.path}/DCIPublicData.js" />
+		</concat>
+
+		<apply executable="java" verbose="true" dest="${dcijswork.path}/" failonerror="true" parallel="false">
+			<fileset dir="${dcijswork.path}/" includes="dcijs.source.js" />
+			<arg line="-jar" />
+			<arg path="${closure.path}" />
+			<arg line="--charset utf-8" />
+			<arg value="--warning_level" />
+			<arg value="QUIET" />
+			<arg value="--js" />
+			<srcfile />
+			<arg value="--js_output_file" />
+			<targetfile />
+			<mapper type="regexp" from="dcijs.source.js" to="dcijs-min.js" />
+		</apply>
+		<delete file="${dcijswork.path}/dcijs.source.js" />
+		<move file="${dcijswork.path}/dcijs-min.js" tofile="${dcijswork.path}/dci-datas.js" />
+
+		<delete file="${dcijsfunc.path}/Login.js" />
+		<apply executable="java" verbose="true" dest="${dcijsfunc.path}/" failonerror="true" parallel="false">
+			<fileset dir="${jssrc.path}/" includes="Login.js" />
+			<arg line="-jar" />
+			<arg path="${closure.path}" />
+			<arg line="--charset utf-8" />
+			<arg value="--warning_level" />
+			<arg value="QUIET" />
+			<arg value="--js" />
+			<srcfile />
+			<arg value="--js_output_file" />
+			<targetfile />
+			<mapper type="regexp" from="Login.js" to="Login.js" />
+		</apply>
+
+		<delete file="${dcijsfunc.path}/IndKanBan.js" />
+		<apply executable="java" verbose="true" dest="${dcijsfunc.path}/" failonerror="true" parallel="false">
+			<fileset dir="${funcjssrc.path}/funcs/" includes="IndKanBan.js" />
+			<arg line="-jar" />
+			<arg path="${closure.path}" />
+			<arg line="--charset utf-8" />
+			<arg value="--warning_level" />
+			<arg value="QUIET" />
+			<arg value="--js" />
+			<srcfile />
+			<arg value="--js_output_file" />
+			<targetfile />
+			<mapper type="regexp" from="IndKanBan.js" to="IndKanBan.js" />
+		</apply>
+
+		<delete file="${dcijsfunc.path}/Main/Index.js" />
+		<apply executable="java" verbose="true" dest="${dcijsfunc.path}/Main/" failonerror="true" parallel="false">
+			<fileset dir="${funcjssrc.path}/main/" includes="Index.js" />
+			<arg line="-jar" />
+			<arg path="${closure.path}" />
+			<arg line="--charset utf-8" />
+			<arg value="--warning_level" />
+			<arg value="QUIET" />
+			<arg value="--js" />
+			<srcfile />
+			<arg value="--js_output_file" />
+			<targetfile />
+			<mapper type="regexp" from="Index.js" to="Index.js" />
+		</apply>
+
+		<ac:for list="${configs.list}" delimiter="," param="funcname">
+			<ac:sequential>
+				<delete file="${dcijsfunc.path}/Configs/@{funcname}.js" />
+				<apply executable="java" verbose="true" dest="${dcijsfunc.path}/Configs/" failonerror="true" parallel="false">
+					<fileset dir="${funcjssrc.path}/configs/" includes="@{funcname}.js" />
+					<arg line="-jar" />
+					<arg path="${closure.path}" />
+					<arg line="--charset utf-8" />
+					<arg value="--warning_level" />
+					<arg value="QUIET" />
+					<arg value="--js" />
+					<srcfile />
+					<arg value="--js_output_file" />
+					<targetfile />
+					<mapper type="regexp" from="@{funcname}.js" to="@{funcname}.js" />
+				</apply>
+			</ac:sequential>
+		</ac:for>
+
+		<!--cus js builder-->
+		<delete dir="${cusjsfunc.path}" />
+		<mkdir dir="${cusjsfunc.path}" />
+		<ac:for list="${customer.list}" delimiter="," param="cusid">
+			<ac:sequential>
+				<echo message="${cusfuncjssrc.path}/@{cusid}" />
+				<if>
+					<available file="${cusfuncjssrc.path}/@{cusid}" type="dir" />
+					<then>
+						<mkdir dir="${cusjsfunc.path}/@{cusid}" />
+						<apply executable="java" verbose="true" dest="${cusjsfunc.path}/@{cusid}/" failonerror="true" parallel="false">
+							<fileset dir="${cusfuncjssrc.path}/@{cusid}" includes="**/*.js" />
+							<arg line="-jar" />
+							<arg path="${closure.path}" />
+							<arg line="--charset utf-8" />
+							<arg value="--warning_level" />
+							<arg value="QUIET" />
+							<arg value="--js" />
+							<srcfile />
+							<arg value="--js_output_file" />
+							<targetfile />
+							<mapper type="glob" from="*.js" to="*.js" />
+						</apply>
+					</then>
+				</if>
+			</ac:sequential>
+		</ac:for>
+	</target>
+</project>
+

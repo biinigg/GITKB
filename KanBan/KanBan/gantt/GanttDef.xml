@@ -1,0 +1,87 @@
+<Grid>
+   <Cfg id="Gantt" MainCol="WSID"/> <!-- Displays tree in column T (Task / Subtask) -->
+   <Cfg DefaultDate="5/1/2008"/> <!-- Default date in calendar for empty date -->
+   <Cfg FullId="1" NumberId="1" IdChars="0123456789"/> <!-- Controls generation of new row ids -->
+   <Cfg Style="Standard"/> 
+   <Cfg MaxHeight="1"/> <!-- Resizes the grid to the whole page -->
+   <Cfg MinTagHeight="300"/>
+   <Cfg Group="WSID,EQID"/> <!-- Groups the grid by columns Region and country -->
+   <Cfg GroupMain="GROUP"/> <!-- When grouped, shows the tree in GROUP column -->
+   <Def>
+      <D Name="Task" Expanded="1" Calculated="1" CalcOrder="EQID,S,E,C1,G"/> <!-- Group of task calculates summary of the tasks -->
+      <D Name="Task" SFormula="minimum(min('S'),min('E'))"/> <!-- Gets the first start date from its children -->
+      <D Name="Task" EFormula="maximum(max('S'),max('E'))"/> <!-- Gets the last end date from its children -->
+      <D Name="Task" C1Formula="ganttpercent('S','E','d')"/> <!-- Calculates average task completion from its children -->
+      <D Name="Task" C2Formula="ganttpercent('S','E','d')"/> <!-- Calculates average task completion from its children -->
+      <D Name="Task" GGanttClass="GanttG" GGanttIcons="1" GGanttEdit="0" GGanttHover="1"/> <!-- Gantt setting specific for Group rows, changes colors and restrict changes by a user -->
+      
+      <!-- Defines the parent rows created by grouping -->
+      <D Name="Group" CDef="" Calculated="1" CalcOrder="EQID,C1,C2,R1"/> <!-- Grouping row is calculated to show summary for its children -->
+      <D Name="Group" AggChildren="1"/> <!-- This group row is never calculated by its parent - always calculates its children -->
+      <D Name="Group" GGanttSummary="2" GGanttRun="RUN" RUNFormula="ganttrunsum()"/> <!-- The main formula to create the summary Run row -->
+      <D Name="Group" Expanded="1" CanExpand="1"/> <!-- The group row is expanded and can expand by default. Set them to 0 to show only the group rows -->
+      <D Name="Group" Spanned="1" GROUPSpan="3" GROUPClass="VAlign" GROUPClassInner="Inner"/>
+      <D Name="Group" CanSelect="0"/> <!-- Restricts selection of the group row -->      
+      <D Name="Group" GGanttRunStart="S" GGanttRunEnd="E"/>   <!-- -->
+      <D Name="Group" GGanttStart="" GGanttEnd="" GGanttDuration=""/> <!-- Clears definition for main bars, because Group row uses only Run bars -->
+      
+      <D Name="Group" R1Formula="sum()" C1Formula="sum()" C2Formula="sum()" />
+   </def>
+   <LeftCols>
+      <C Name="GROUP" Type="Text" Width="1" GroupWidth="50" WidthPad="0"/> 
+      <C Name="id" Width="40" Type="Text" CanEdit="0"/> <!-- Row id, informational column -->
+      <C Name="WSID" Width="140" Type="Text" CanEdit="0"/> <!-- Row id, informational column -->
+      <C Name="EQID" Width="140" Type="Text"/> <!-- Column Task / Section-->
+      <C Name="S" Width="60" Visible="0" Type="Date" Format="MMM dd"/> <!-- Column Start date-->
+      <C Name="E" Width="60" Visible="0" Type="Date" Format="MMM dd"/> <!-- Column End Date -->
+      <C Name="C1" Width="40" Type="Float" /> <!-- Column Complete -->
+      <C Name="C2" Width="40" Type="Float" /> <!-- Column Complete -->
+      <C Name="R1" Width="40" Type="Int" CanGroup="0" /> <!-- Column Task / Section-->
+      <C Name="D" Visible="0" Width="65" Type="Text" CanEdit="0" Button="Defaults" Defaults="|*RowsColid*VariableDef" Range="1"/> <!-- Column dependencies (Next) -->
+      <C Name="DUR" Visible="0" Width="20" Type="Text" HtmlPostfix=" hours"/>
+      <C Name="RUN" Visible="0" Type="Text"/>
+      <C Name="RES" Visible="0" Type="Text" Formula="'EQ2*'+ C2 + ';EQ1*'+ C1"/>
+    </LeftCols>
+   <Cols>
+      <!-- Gantt chart column -->
+      <C Name="G" Type="Gantt" 
+         GanttStart="S" GanttEnd="E" GanttComplete="C1" GanttDescendants="D"
+         GanttUnits="d" GanttChartRound="w" GanttEdit=""
+         GanttRight="1" GanttSlack="Slack"
+         GanttBackground="5/1/2008~7/1/2008" GanttBackgroundRepeat="w"
+         GanttHeader1="w#dddddd MMMM yyyy"
+         GanttHeader2="d#ddddd" CanSelect = "1"
+         CanSelect="1" GanttCorrectDependenciesFixed="1"
+         />
+      
+   </Cols>
+   <RightCols>
+   <C Name="G" GanttResources="RES"/>   
+   </RightCols>
+   
+    <!-- Resources definition -->
+   <Resources>
+      <R Name="EQ1" Price="1" Type="1" Availability="100"/>
+      <R Name="EQ2" Price="2" Type="1" Availability="100"/>
+   </Resources>
+
+   <!-- Resources usage sub table -->
+   <Def>
+      <!-- Default row for resources -->
+      <D Name='Resource' GGanttAvailability="EQID#1" GGanttAvailabilityFormat="0.#"/> <!-- Defines the resource usage chart -->
+      <D Name='Resource' CanEdit='0' CanDelete="" CanSelect="0" Calculated="1" Panel=""/> <!-- The resource chart row does not permit any changes -->
+      <D Name='Resource' GGanttStart="" GGanttEnd="" GGanttEdit="" GGanttComplete="" GGanttAncestors="" GGanttDescendants=""/> <!-- Clears the setting from <C> column -->
+      <D Name='Resource' Spanned='1' GROUPSpan='9' Height='30' idVisible='0' GROUPVisible='1'/> <!-- Defines the look of the other cells -->
+   </Def>
+   <Foot>
+      <Header id='-2' SortIcons='0' idVisible='0' GROUPVisible='1' Spanned='1'  GROUP='Resource name' GROUPSpan='9'  G='Resource chart' CanPrint='1'/>  <!-- Header of resources sub table with column captions -->
+      
+      <I id="-3" Def="Resource" EQID="EQ1" GROUP="EQ1" Visible='0'/> 
+      <I id="-4" Def="Resource" EQID="EQ2" GROUP="EQ2" Visible='0'/> 
+      
+      <!--
+      <I id="-3" Def="Resource" EQID=""/> 
+      -->
+   </Foot>
+   <!-- End of resources usage sub table -->
+</Grid>

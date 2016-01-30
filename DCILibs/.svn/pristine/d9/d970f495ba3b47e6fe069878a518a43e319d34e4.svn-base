@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- WARNING: Eclipse auto-generated file.
+              Any modifications will be overwritten.
+              To include a user specific buildfile here, simply create one in the same
+              directory with the processing instruction <?eclipse.ant.import?>
+              as the first entry and export the buildfile again. -->
+<project basedir="." default="build" name="DatabaseLib">
+	<property environment="env" />
+	<property name="ECLIPSE_HOME" value="D:/Tools/eclipse" />
+	<property name="debuglevel" value="source,lines,vars" />
+	<property name="target" value="1.6" />
+	<property name="source" value="1.6" />
+	<property name="dciLib.path" value="../SFTLibs" />
+	<property name="thirdPartyLib.path" value="../ThirdPartyLibs" />
+	<path id="DatabaseLib.classpath">
+		<pathelement location="bin" />
+		<pathelement location="${dciLib.path}/DCIInterface.jar" />
+		<fileset dir="${thirdPartyLib.path}">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+	<target depends="clean" name="init">
+		<mkdir dir="bin" />
+		<copy includeemptydirs="false" todir="bin">
+			<fileset dir="src">
+				<exclude name="**/*.java" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="clean">
+		<echo message="clear target dirs and files" />
+		<delete dir="bin" />
+		<delete file="${dciLib.path}/DatabaseLib.jar" />
+	</target>
+	<target depends="clean" name="cleanall" />
+	<target depends="build-project" name="build" />
+	<target depends="init" name="build-project">
+		<echo message="${ant.project.name}: ${ant.file}" />
+		<echo message="classpath=${DatabaseLib.classpath}" />
+		
+		<javac debug="true" debuglevel="${debuglevel}" destdir="bin" includeantruntime="false" 
+                 	source="${source}" target="${target}" encoding="UTF-8">
+			<src path="src" />
+			<classpath refid="DatabaseLib.classpath" />
+		</javac>
+		<jar destfile="${dciLib.path}/DatabaseLib.jar" basedir="bin" includes="**/*.class" />
+
+	</target>
+
+	<target name="TestDatabaseLib">
+		<java classname="tw.com.dci.sft.DataBaseLib.Database.test" failonerror="true" fork="yes">
+			<classpath refid="DatabaseLib.classpath" />
+		</java>
+	</target>
+</project>

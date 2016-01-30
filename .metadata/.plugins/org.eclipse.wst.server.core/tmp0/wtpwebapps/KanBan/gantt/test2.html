@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html>
+   <head>
+     <script src="./../gantt/GridE.js"> </script>
+      <link href="./../gantt/css/Styles/Examples.css" rel="stylesheet" type="text/css" />
+   </head>
+   <body>
+      <!-- BodyStart --> 
+     
+       <div id="Gantt" style="WIDTH:1000px;HEIGHT:400px;">
+         <treegrid id="Gantt" Debug="Check" Layout_Url="./../gantt/GanttDef.xml" Data_Url="./../gantt/GanttData.xml"> </treegrid>
+      </div>
+      <div><input type="button" value="test" onclick="window.parent.test();" /> </div>
+      
+<script>
+
+Grids.OnClick = function(grid,row,col,x,y) { 
+	 console.log(grid.id);
+	 console.log(col);
+if(grid.id == "Gantt" && col == "G"){
+
+var f = grid.GetRows(grid.Foot);
+
+  //if(f.length >= 2){
+  //	if(row['EQID'] == null || row['EQID'] == ""){
+  //	   f[1]["EQID"] = "";
+  //	}else{
+  //	   f[1]["EQID"] = row['EQID'];
+  //	}
+  //}
+  console.log(f.length);
+  for(var i = 1 ; i < f.length ; i++){
+    if(f[i]["EQID"] == row['EQID']){
+     grid.ShowRow(f[i]);
+    }else{
+     grid.HideRow(f[i]);
+    }
+  }
+
+grid.RefreshGantt();
+grid.EndUpdate();
+//grid.ReloadBody();
+//grid.RenderBody();
+
+}
+
+}
+</script>
+      
+   </body>
+</html>

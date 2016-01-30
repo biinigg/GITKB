@@ -1,0 +1,65 @@
+package com.dsc.dci.jweb.funcs.ekb.kanban;
+
+import java.util.HashMap;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.dci.jweb.DCIConstants.DCIWebConstants;
+import com.dci.jweb.PublicLib.PublicMethods;
+
+@Controller
+@RequestMapping("/Funcs/EKB/KanBan.dsc")
+public class KanBanController {
+	@RequestMapping(method = RequestMethod.POST)
+	public @ResponseBody
+	HashMap<String, Object> postMethod(HttpServletRequest request, HttpServletResponse response) {
+		System.out.println("TEST KANBAN DSC");
+		HashMap<String, Object> datas = null;
+		String dcikey = request.getParameter(DCIWebConstants.getPostTagId());
+		String action = request.getParameter("action");
+		String uid = request.getParameter("uid");
+		HttpSession session = null;
+
+		if (dcikey != null && dcikey.equals(DCIWebConstants.getPostTagValue())) {
+			session = request.getSession();
+			if (action.equals("init")) {
+				datas = new KanBan(session, uid).getInitData(request.getParameter("sql_id"));
+			} else if (action.equals("query")) {
+				datas = new KanBan(session, uid).getKanBanData(request.getParameter("page"),
+						request.getParameter("pagesize"), request.getParameter("filter"), request.getParameter("sort"),
+						request.getParameter("sql_id"), request.getParameter("conn_id"));
+			} else if (action.equals("marqueeData")) {
+				datas = new KanBan(session, uid).getMarqueeData(request.getParameter("sql_id"),
+						request.getParameter("conn_id"));
+			} else if (action.equals("saveFormat") || action.equals("loadDefFormat")) {
+				datas = new KanBan(session, uid).saveFromat(request.getParameter("datas"),
+						request.getParameter("gridid"), request.getParameter("coldatas"));
+			} else if (action.equals("saveCondi") || action.equals("loadDefCondi")) {
+				datas = new KanBan(session, uid).saveData(request.getParameter("datas"),
+						request.getParameter("sql_id"), request.getParameter("advDatas"));
+			} else if (action.equals("funcInfo")) {
+				datas = new KanBan(session, uid).getFuncInfo(request.getParameter("conn_id"),
+						request.getParameter("func_id"));
+			} else if (action.equals("excel") || action.equals("html")) {
+				new PublicMethods().downloadFile(
+						request,
+						response,
+						new KanBan(session, uid).exportFile(request.getParameter("filter"),
+								request.getParameter("sort"), request.getParameter("func_id"),
+								request.getParameter("conn_id"), request.getParameter("cols"),
+								request.getParameter("ctype")), action, request.getParameter("func_id"));
+			} else if (action.equals("updatePanelOpen")) {
+				datas = new KanBan(session, uid).saveInitParams(request.getParameter("sql_id"),
+						request.getParameter("params_value"));
+			}
+		}
+		return datas;
+	}
+}

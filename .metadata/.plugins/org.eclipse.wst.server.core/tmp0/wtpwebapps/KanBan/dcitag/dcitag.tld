@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE taglib PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.1//EN" "http://java.sun.com/dtd/web-jsptaglibrary_1_1.dtd" >
+<taglib>
+  <tlibversion>1.0</tlibversion>
+  <jspversion>2.1</jspversion>
+  <shortname>dcitag</shortname>  
+  <info>DCI JSP Tag </info>
+  <tag>
+    <name>reqAttr</name>
+    <tagclass>com.dci.jweb.DCITags.Request.getReqAttribut</tagclass>
+    <teiclass></teiclass>
+    <body-content>tagdependent</body-content> 
+    <info>Get Request Attribute</info>
+    <attribute>
+        <name>attrName</name> 
+        <required>true</required>
+    </attribute>
+  </tag>
+  <tag>
+    <name>reqParam</name>
+    <tagclass>com.dci.jweb.DCITags.Request.getReqParameter</tagclass>
+    <teiclass></teiclass>
+    <body-content>tagdependent</body-content> 
+    <info>Get Request Parameter</info>
+    <attribute>
+        <name>paramName</name> 
+        <required>true</required>
+    </attribute>
+  </tag>
+  <tag>
+    <name>errCode</name>
+    <tagclass>com.dci.jweb.DCITags.Request.getErrorCode</tagclass>
+    <body-content>tagdependent</body-content> 
+    <info>Get Error Code</info>
+    <attribute>
+        <name>showCode</name> 
+        <required>true</required>
+    </attribute>
+  </tag>
+  <tag>
+    <name>multiLang</name>
+    <tagclass>com.dsc.dci.jweb.aptags.getMultiLanguage</tagclass>
+    <body-content>tagdependent</body-content> 
+    <info>Get Multi Language Value</info>
+    <attribute>
+        <name>langKey</name> 
+        <required>false</required>
+    </attribute>
+    <attribute>
+        <name>requestTag</name> 
+        <required>false</required>
+    </attribute>
+  </tag>
+  <tag>
+    <name>extLangFile</name>
+    <tagclass>com.dsc.dci.jweb.aptags.getExtLangFilePath</tagclass>
+    <body-content>tagdependent</body-content> 
+    <info>Get EXT Language File Path</info>
+    <attribute>
+        <name>langDirPath</name> 
+        <required>true</required>
+    </attribute>
+    <attribute>
+        <name>useType</name> 
+        <required>true</required>
+    </attribute>
+  </tag>
+</taglib>
+

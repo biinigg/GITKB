@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC  "-//SPRING/DTD BEAN/EN"  "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+
+	<!-- functions -->
+	<!-- Configs -->
+	<bean id="sysdbconfig"
+		class="com.dsc.dci.jweb.funcs.configs.sysdbconfig.SysDBConfigController" />
+	<bean id="regserial"
+		class="com.dsc.dci.jweb.funcs.configs.regserial.RegSerialController" />
+	<bean id="userconfig"
+		class="com.dsc.dci.jweb.funcs.configs.userconfig.UserConfigController" />
+	<bean id="groupconfig"
+		class="com.dsc.dci.jweb.funcs.configs.groupconfig.GroupConfigController" />
+	<bean id="connconfig"
+		class="com.dsc.dci.jweb.funcs.configs.connconfig.ConnConfigController" />
+	<bean id="roleconfig"
+		class="com.dsc.dci.jweb.funcs.configs.roleconfig.RoleConfigController" />
+	<bean id="iconconfig"
+		class="com.dsc.dci.jweb.funcs.configs.iconconfig.IconConfigController" />
+	<bean id="sqleditor"
+		class="com.dsc.dci.jweb.funcs.configs.sqleditor.SQLEditorController" />
+	<bean id="marqueeconfig"
+		class="com.dsc.dci.jweb.funcs.configs.marqueeconfig.MarqueeConfigController" />
+	<bean id="paramsconfig"
+		class="com.dsc.dci.jweb.funcs.configs.paramsconfig.ParamsConfigController" />
+	<bean id="pe000config"
+		class="com.dsc.dci.jweb.funcs.configs.pe000config.PE000ConfigController" />
+
+	<!-- EKB -->
+	<bean id="kanban" class="com.dsc.dci.jweb.funcs.ekb.kanban.KanBanController" />
+	<bean id="indkanban" class="com.dsc.dci.jweb.funcs.ekb.indkanban.IndKanBanController" />
+	<bean id="pe001" class="com.dsc.dci.jweb.funcs.ekb.pe001.PE001Controller" />
+
+	<!-- WPP -->
+	<bean id="wpp001" class="com.dsc.dci.jweb.funcs.wpp.wpp001.WPP001Controller" />
+	<bean id="wpp002" class="com.dsc.dci.jweb.funcs.wpp.wpp002.WPP002Controller" />
+	<bean id="wpp003" class="com.dsc.dci.jweb.funcs.wpp.wpp003.WPP003Controller" />
+	<bean id="wpp004" class="com.dsc.dci.jweb.funcs.wpp.wpp004.WPP004Controller" />
+	<bean id="wpp005" class="com.dsc.dci.jweb.funcs.wpp.wpp005.WPP005Controller" />
+	<bean id="wpp006" class="com.dsc.dci.jweb.funcs.wpp.wpp006.WPP006Controller" />
+	<bean id="wpp007" class="com.dsc.dci.jweb.funcs.wpp.wpp007.WPP007Controller" />
+
+	<!-- LKB -->
+	<bean id="lkb001" class="com.dsc.dci.jweb.funcs.lkb.lkb001.LKB001Controller" />
+	<bean id="lkb002" class="com.dsc.dci.jweb.funcs.lkb.lkb002.LKB002Controller" />
+	<bean id="lkb003" class="com.dsc.dci.jweb.funcs.lkb.lkb003.LKB003Controller" />
+	<bean id="layoutkanban" class="com.dsc.dci.jweb.funcs.lkb.layoutkanban.LayoutKanBanController" />
+
+	<!-- Main -->
+	<bean id="login" class="com.dsc.dci.jweb.funcs.main.login.LoginController" />
+	<bean id="logininfo" class="com.dsc.dci.jweb.funcs.main.login.LoginInfoController" />
+	<bean id="index" class="com.dsc.dci.jweb.funcs.main.index.IndexController" />
+	
+	<!-- System -->
+	<bean id="usersyncrecv" class="com.dsc.dci.jweb.funcs.system.usersyncrecv.UserSyncRecvController" />	
+	
+	<!-- App -->
+	<bean id="AppReceiver" class="com.dsc.dci.jweb.funcs.apps.interfaces.AppController" />
+	 
+	
+</beans>
+

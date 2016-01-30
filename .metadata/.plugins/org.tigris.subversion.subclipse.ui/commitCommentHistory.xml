@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CommitComments>	<CommitComment>28173: 晉燁工業客製功能：
+1.調整縮放查詢畫面，報表畫面沒有變大，反而下方的空白處變大了
+2.自訂格式的icon會判斷，原先單頭單身個別看板若有分別自訂格式則分別顯示。</CommitComment>
+</CommitComments>
